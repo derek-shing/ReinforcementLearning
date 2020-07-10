@@ -11,9 +11,12 @@ class GridWorld:
 
 
     def __init__(self,row, col):
+        self.row = row
+        self.col = col
         self.state= self.create_state(row,col)
         self.standard_grid()
         self.define_action()
+
 
     def print_state(self):
         print(self.state)
@@ -28,6 +31,39 @@ class GridWorld:
     #define Action
     def define_action(self):
         self.A = ['U','D','L','R']
+        self.action={}
+        for s in self.state:
+            possible_action =[]
+            for a in self.A:
+                if self.is_possible_move(a,s):
+                    possible_action.append(a)
+            self.action[s] = possible_action
+
+
+
+    def is_possible_move(self,a,cs):
+        result =False
+        if a == self.A[0]: #Up
+            s = (cs[0]-1,cs[1])
+            if s in self.state:
+                result = True
+        elif a == self.A[1]: #down
+            s = (cs[0]+1,cs[1])
+            if s in self.state:
+                result = True
+        elif a == self.A[2]: #Left
+            s = (cs[0],cs[1] -1)
+            if s in self.state:
+                result = True
+        elif a == self.A[3]: #Right
+            s = (cs[0],cs[1] + 1)
+            if s in self.state:
+                result = True
+        return result
+
+
+
+
 
     def move(self,a):
         if a == self.A[0]: #Up
@@ -47,6 +83,27 @@ class GridWorld:
             if s in self.state:
                 self.current_state = s
 
+    def get_next_state(self,a,cs):
+        result = cs
+        if a == self.A[0]: #Up
+            s = (cs[0]-1,cs[1])
+            if s in self.state:
+                result = s
+        elif a == self.A[1]: #down
+            s = (cs[0]+1, cs[1])
+            if s in self.state:
+                result = s
+        elif a == self.A[2]: #Left
+            s = (cs[0], cs[1]-1)
+            if s in self.state:
+                result = s
+        elif a == self.A[3]: #Right
+            s = (cs[0], cs[1] + 1)
+            if s in self.state:
+                result = s
+
+        return result
+
     def print_current_state(self):
         print("The current state is ",self.current_state)
 
@@ -62,12 +119,9 @@ class GridWorld:
 
 
 
-g = GridWorld(3,4)
-g.print_current_state()
-while not g.is_terminated_state(g.current_state):
-    i=input()
-    g.move(i)
-    g.print_current_state()
+
+
+
 
 #g.print_state()
 #print(g.reward)
