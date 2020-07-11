@@ -41,17 +41,23 @@ for s in g.state:
 
 grama = 0.9
 
+n=0
 while True:
+    n+=1
+    print("No of iteration :",n)
+    different = 0
     for s in g.state:
-        old_v = V[s]
-        new_v= 0
-        for a in g.action[s]:
-            next_s = g.get_next_state(a,s)
-            print ('next state : ',next_s)
-            new_v += g.reward.get(next_s,0) + (grama * V[next_s])
-            print_value(V,g)
-        V[s] = new_v
-    break
+        if not g.is_terminated_state(s):
+            old_v = V[s]
+            new_v= 0
+            for a in policy[s]:
+                next_s = g.get_next_state(a,s)
+                new_v += g.reward.get(next_s,0) + (grama * V[next_s])
+            V[s] = new_v
+            different = max(different, abs(new_v-old_v))
+
+    if different<0.0003:
+        break
 
 
 
