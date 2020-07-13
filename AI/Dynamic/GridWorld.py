@@ -16,6 +16,7 @@ class GridWorld:
         self.state= self.create_state(row,col)
         self.standard_grid()
         self.define_action()
+        self.define_probs()
 
 
     def print_state(self):
@@ -39,6 +40,14 @@ class GridWorld:
                     possible_action.append(a)
             self.action[s] = possible_action
 
+
+    def define_probs(self):
+        self.probs={}
+        for s in self.state:
+            for a in self.action[s]:
+                self.probs[(s,a)] = {self.get_next_state(a,s):1}
+
+        self.probs[(1,2),'U']={(0,2):0.5, (1,3):0.5}
 
 
     def is_possible_move(self,a,cs):
@@ -118,7 +127,8 @@ class GridWorld:
 
 
 
-
+g = GridWorld(3,4)
+print(g.probs)
 
 
 
