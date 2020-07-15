@@ -1,3 +1,5 @@
+import numpy
+
 class GridWorld:
     #Contruct the Grid world by row and col
 
@@ -47,7 +49,7 @@ class GridWorld:
             for a in self.action[s]:
                 self.probs[(s,a)] = {self.get_next_state(a,s):1}
 
-        self.probs[(1,2),'U']={(0,2):0.5, (1,3):0.5}
+        self.probs[((1,2),'U')]={(0,2):0.5, (1,3):0.5}
 
 
     def is_possible_move(self,a,cs):
@@ -75,6 +77,18 @@ class GridWorld:
 
 
     def move(self,a):
+        transition_probs = self.probs[(self.current_state,a)]
+        list_of_state = list(transition_probs.keys())
+        list_of_p = list(transition_probs.values())
+        print(' state list: ',list_of_state)
+        print('list_of_p: ', list_of_p)
+        ind = numpy.random.choice(range(len(list_of_state)),p=list_of_p)
+        self.current_state = list_of_state[ind]
+
+
+
+
+        '''
         if a == self.A[0]: #Up
             s = (self.current_state[0]-1,self.current_state[1])
             if s in self.state:
@@ -91,6 +105,7 @@ class GridWorld:
             s = (self.current_state[0],self.current_state[1] + 1)
             if s in self.state:
                 self.current_state = s
+        '''
 
     def get_next_state(self,a,cs):
         result = cs
@@ -117,7 +132,7 @@ class GridWorld:
         print("The current state is ",self.current_state)
 
     def is_terminated_state(self,s):
-        if s == (0,3):
+        if s == (0,3) or s==(1,3):
             return True
         else:
             return False
@@ -127,8 +142,6 @@ class GridWorld:
 
 
 
-g = GridWorld(3,4)
-print(g.probs)
 
 
 
