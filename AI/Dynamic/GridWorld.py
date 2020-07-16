@@ -28,8 +28,9 @@ class GridWorld:
         self.current_state =(2,0)
         self.reward = {}
         for s in self.state:
-            self.reward[s]=-1
+            self.reward[s]=0
         self.reward[(0,3)] = 1
+        self.reward[(1,3)] = -1
 
     #define Action
     def define_action(self):

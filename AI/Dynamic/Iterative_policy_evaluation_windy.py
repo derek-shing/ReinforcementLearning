@@ -42,9 +42,10 @@ for s in g.state:
 grama = 0.9
 
 n=0
-while True:
+while n<10:
     n+=1
     print("No of iteration :",n)
+    print_value(V,g)
     different = 0
     for s in g.state:
         if not g.is_terminated_state(s):
@@ -55,8 +56,7 @@ while True:
                 transition_probs = g.probs[(s,a)]
                 possible_next_state=list(transition_probs.keys())
                 for next_state in possible_next_state:
-                    print(next_state)
-                    new_v += action_prob*transition_probs.get(next_state,0)*g.reward.get(next_state,0) + (grama * V[next_state])
+                    new_v += action_prob*transition_probs.get(next_state,0)*(g.reward.get(next_state,0) + (grama * V[next_state]))
             V[s] = new_v
             different = max(different, abs(new_v-old_v))
 
