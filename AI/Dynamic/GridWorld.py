@@ -37,18 +37,20 @@ class GridWorld:
         self.A = ['U','D','L','R']
         self.action={}
         for s in self.state:
-            possible_action =[]
-            for a in self.A:
-                if self.is_possible_move(a,s):
-                    possible_action.append(a)
-            self.action[s] = possible_action
+            if not self.is_terminated_state(s):
+                possible_action =[]
+                for a in self.A:
+                    if self.is_possible_move(a,s):
+                        possible_action.append(a)
+                self.action[s] = possible_action
 
 
     def define_probs(self):
         self.probs={}
         for s in self.state:
-            for a in self.action[s]:
-                self.probs[(s,a)] = {self.get_next_state(a,s):1}
+            if not self.is_terminated_state(s):
+                for a in self.action[s]:
+                    self.probs[(s,a)] = {self.get_next_state(a,s):1}
 
         self.probs[((1,2),'U')]={(0,2):0.5, (1,3):0.5}
 
