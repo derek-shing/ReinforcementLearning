@@ -86,6 +86,31 @@ V = eval_policy(g,policy)
 print_policy(policy,g)
 print_value(V,g)
 
+grama = 0.9
+
+while True:
+    V = eval_policy(g,policy)
+    policy_changed = False
+    for s in g.state:
+        if not g.is_terminated_state(s):
+            max_v = V[s]
+            for a in g.action[s]:
+                v=0
+                transition_probs = g.probs[(s,a)]
+                possible_next_state=list(transition_probs.keys())
+                for next_state in possible_next_state:
+                    v += transition_probs.get(next_state,0)*(g.reward.get(next_state,0) + (grama * V[next_state]))
+                if v > max_v:
+                    policy_changed=True
+                    policy[s] = a
+
+
+    if policy_changed==False:
+        break
+
+print_policy(policy,g)
+print_value(V,g)
+
 #g.print_state()
 
 """
