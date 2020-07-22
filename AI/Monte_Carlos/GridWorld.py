@@ -83,8 +83,6 @@ class GridWorld:
         transition_probs = self.probs[(self.current_state,a)]
         list_of_state = list(transition_probs.keys())
         list_of_p = list(transition_probs.values())
-        print(' state list: ',list_of_state)
-        print('list_of_p: ', list_of_p)
         ind = numpy.random.choice(range(len(list_of_state)),p=list_of_p)
         self.current_state = list_of_state[ind]
 
