@@ -75,6 +75,10 @@ def calSampleMean(mean_list,new_sample):
 
 n=10000
 sample_mean={}
+
+
+
+
 for i in range(n):
     state_value = play_game(policy,g)
     for new_sample in state_value:
