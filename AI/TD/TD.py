@@ -33,6 +33,16 @@ def print_value(V,g):
         print("")
 
 
+eps=0.2
+
+def epson_greedy_move(eps,s,a):
+    if random.random()<eps:
+        return random.choice(g.action[s])
+    else:
+        return a
+
+
+
 
 def play_game(policy, g, Q):
     g.current_state = random.choice(g.state)
@@ -45,7 +55,9 @@ def play_game(policy, g, Q):
     seen_states.add(g.current_state)
 
     while not g.is_terminated_state(g.current_state):
-        a = argmax(Q,s,g)
+        #a = argmax(Q,s,g)
+        a = policy[s]
+        a = epson_greedy_move(eps,s,a)
         s=g.current_state
         next_state = g.get_next_state(a,g.current_state)
         if next_state in seen_states:
@@ -55,12 +67,10 @@ def play_game(policy, g, Q):
         else:
 
             r = g.reward.get(next_state,0)
-            print_policy(policy,g)
-            print(next_state)
             if not g.is_terminated_state(next_state):
                 a2 = argmax(Q,next_state,g)
-                print("current_state :",)
-                print("a2 : ",a2)
+                a2 = epson_greedy_move(eps,next_state,a2)
+                a2 = policy [next_state]
                 Q[(s,a)] = Q[(s,a)] + alpha*(r+grama*Q[(next_state,a2)] - Q[(s,a)])
             else:
                 Q[(s,a)] = Q[(s,a)] + alpha*(r + 0 - Q[(s,a)])
@@ -68,9 +78,10 @@ def play_game(policy, g, Q):
             seen_states.add(g.current_state)
             step+=1
 
-    #for s in g.state:
-    #    if not g.is_terminated_state(s):
-    #        policy[s] = argmax(Q,s,g)
+        for s in g.state:
+            if not g.is_terminated_state(s):
+                if argmax(Q,s,g) > policy[s]:
+                    policy[s] = argmax(Q,s,g)
 
     return Q, policy
 
@@ -101,9 +112,11 @@ def init_policy(g):
             policy[s]=random.choice(g.action[s])
     return policy
 
-#policy = init_policy(g)
+policy = init_policy(g)
 Q = {}
-
+print("init_policy: ")
+print_policy(policy,g)
+print("-----------------------")
 for s in g.state:
     if not g.is_terminated_state(s):
         for a in g.action[s]:
@@ -126,6 +139,7 @@ for i in range(n):
 
 
 
+
 print(Q)
 '''
     for new_sample in state_value:
@@ -133,22 +147,24 @@ print(Q)
 
     for new_mean in sample_mean:
         Q[(new_mean[0],new_mean[1])] = sample_mean[new_mean][0]
-
-    for s in g.state:
-        if not g.is_terminated_state(s):
-            policy[s] = argmax(Q,s,g)
 '''
+for s in g.state:
+    if not g.is_terminated_state(s):
+        policy[s] = argmax(Q,s,g)
 
-'''
+
+
 #print(sample_mean)
 print_policy(policy,g)
+
+
+
 for s in g.state:
     if not g.is_terminated_state(s):
         V[s] = Q[(s,policy[s])]
 
 print_value(V,g)
 
-'''
 
 #for v in sample_mean:
 #    V[v] = sample_mean[v][0]
