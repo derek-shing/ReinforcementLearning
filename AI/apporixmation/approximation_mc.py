@@ -37,7 +37,7 @@ def print_value(V,g):
 
 
 def model(s):
-    return np.
+    return np.array([s[0] , s[1] , s[0]*s[1] , 1])
 
 
 
@@ -63,6 +63,7 @@ def play_game(policy, g):
         state_value.append((s,G))
     return state_value
 
+
 V={}
 for s in g.state:
     V[s]=0
@@ -84,8 +85,17 @@ n=10000
 sample_mean={}
 
 
+theta = np.random.randn(4) 
+print("theta :" ,theta)
 
 
+
+
+
+
+alpha =0.01
+
+'''
 for i in range(n):
     state_value = play_game(policy,g)
     for new_sample in state_value:
@@ -94,5 +104,21 @@ for i in range(n):
 print(sample_mean)
 for v in sample_mean:
     V[v] = sample_mean[v][0]
+
+'''
+
+
+for i in range(n):
+    state_value = play_game(policy,g)
+    for s,G in state_value:
+        x = model(s)
+        old_theta = theta.copy()
+        theta +=alpha * (G - theta.dot(x))*x
+
+for s in g.state:
+    if not g.is_terminated_state(s):
+        V[s] = theta.dot(model(s))
+    else:
+        V[s]=0
 
 print_value(V,g)
