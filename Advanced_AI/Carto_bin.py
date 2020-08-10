@@ -2,6 +2,10 @@ import gym
 import numpy as np
 import seaborn as sns
 import random
+from gym import wrappers
+import os
+import sys
+from datetime import datetime
 
 
 env = gym.make('CartPole-v0')
@@ -33,10 +37,12 @@ def get_action(Q,observation):
 
 
 def playgame(env,Q):
+
     o = env.reset()
     done=False
     reward =0
     while not done:
+        env.render()
         a = get_action(Q,o)
         previous_o = o
         o,r,done,info = env.step(a)
@@ -54,7 +60,7 @@ def update(Q,previous_o,a,r,o):
     state = to_state(previous_o)
     next_state = to_state(o)
     G = r + 0.9 *predict(Q, next_state)
-    Q[state][a]+= Q[state][a] + 0.02*(G - Q[state][a])
+    Q[state][a]= Q[state][a] + 0.02*(G - Q[state][a])
     return Q
 
 
@@ -65,11 +71,16 @@ num_actions =2
 
 Q = np.random.uniform(low=-1, high=1, size=(num_states, num_actions))
 
-num_esp = 10000
+num_esp = 1000
+
+filename = os.path.basename(__file__).split('.')[0]
+monitor_dir = './' + filename + '_' + str(datetime.now())
+#env = wrappers.Monitor(env, monitor_dir)
 
 for i in range(num_esp):
+
     reward = playgame(env,Q)
-    print(i," Iteration: ", reward)
+    print(f"{i}th Iteration: The reward is {reward}")
 
-
+env.close()
 #ns.distplot(record['CPosition'])
