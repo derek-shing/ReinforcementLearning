@@ -1,2 +1,2 @@
 # ReinforcementLearning
-3 Reinforcement Learning course exercise
+3 Reinforcement Learning course exercise 
